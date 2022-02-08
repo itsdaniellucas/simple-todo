@@ -1,0 +1,29 @@
+{
+    "db": {
+        "dialect": "postgres",
+        "host": "st_db",
+        "port": 5432,
+        "username": "postgres",
+        "password": "postgres",
+        "database": "simpletodo"
+    },
+    "security": {
+        "saltRounds": 10
+    },
+    "jwt": {
+        "secret": "r8uEZgo0WBQruzZNtCIlDDTwdCEmqmZZBW25x34TdQnq1p7sxxqbbYGysAZg58r",
+        "expiration": "1h"
+    },
+    "cache": {
+        "host": "st_redis",
+        "port": 6379,
+        "ttl": 600
+    },
+    "queue": {
+        "broker": "st_kafka:9092"
+    },
+    "ports": {
+        "main": 3000,
+        "queue": 3001
+    }
+}

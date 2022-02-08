@@ -1,0 +1,77 @@
+version: "3"
+services:
+  simple_todo:
+    image: 'simple_todo:dev'
+    container_name: 'st_server'
+    build:
+      context: .
+      dockerfile: Dockerfile_main
+    ports:
+      - "3000:3000"
+    links:
+      - "st_db"
+      - "st_kafka"
+      - "st_redis"
+    depends_on:
+      - "st_db"
+      - "st_kafka"
+      - "st_redis"
+    
+  st_queue:
+    image: 'simple_todo_queue:dev'
+    container_name: 'st_queue'
+    build:
+      context: .
+      dockerfile: Dockerfile_queue
+    ports:
+      - '3001:3001'
+    links:
+      - "st_db"
+      - "st_kafka"
+      - "st_redis"
+    depends_on:
+      - "st_db"
+      - "st_kafka"
+      - "st_redis"
+
+  st_db:
+    image: postgres:14.1-alpine
+    container_name: 'st_db'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+
+  st_zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    container_name: 'st_zookeeper'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  st_kafka:
+    image: 'bitnami/kafka:latest'
+    container_name: 'st_kafka'
+    hostname: 'st_kafka'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ADVERTISED_HOST_NAME=st_kafka
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://st_kafka:9092
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=st_zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    links:
+      - 'st_zookeeper'
+    depends_on:
+      - 'st_zookeeper'
+
+  st_redis:
+    image: redis:6.0
+    container_name: 'st_redis'
+    ports: 
+      - "6379:6379"

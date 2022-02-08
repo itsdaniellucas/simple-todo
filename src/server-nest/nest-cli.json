@@ -1,0 +1,39 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/simple-todo/src",
+  "monorepo": true,
+  "root": "apps/simple-todo",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/simple-todo/tsconfig.app.json"
+  },
+  "projects": {
+    "simple-todo": {
+      "type": "application",
+      "root": "apps/simple-todo",
+      "entryFile": "main",
+      "sourceRoot": "apps/simple-todo/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/simple-todo/tsconfig.app.json"
+      }
+    },
+    "kafka": {
+      "type": "application",
+      "root": "apps/kafka",
+      "entryFile": "main",
+      "sourceRoot": "apps/kafka/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/kafka/tsconfig.app.json"
+      }
+    },
+    "shared": {
+      "type": "library",
+      "root": "libs/shared",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared/tsconfig.lib.json"
+      }
+    }
+  }
+}
